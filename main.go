@@ -12,12 +12,12 @@ func main() {
 
 	server := server.Server{*port, false}
 	e := server.Listen()
-	if e != 0 {
+	if e != nil {
 		return
 	}
 
 	e = server.StopListening()
-	if e != 0 {
+	if e != nil {
 		return
 	}
 }

@@ -1,6 +1,8 @@
 package server
 
+import "errors"
 import "strconv"
+import "net"
 
 import "github.com/sulami/odf_server/log"
 
@@ -9,13 +11,28 @@ type Server struct {
 	Online	bool
 }
 
-func (s *Server) Listen() (err int) {
+func (s *Server) Listen() (err error) {
 	log.Log("Server starting up...")
 
 	if s.Online {
 		log.Log("Error: Server is already online")
-		err = 1
+		err = errors.New("Server is already online")
 		return
+	}
+
+	ln, e := net.Listen("tcp", ":" + string(s.Port))
+	if e != nil {
+		log.Log("Error: Could not bring up server")
+		err = errors.New("Could not bring up server")
+		return
+	}
+
+	for {
+		conn, e:= ln.Accept()
+		if e != nil {
+			log.Log("Error: something")
+		}
+		go handleConnection(conn)
 	}
 
 	s.Online = true
@@ -24,12 +41,12 @@ func (s *Server) Listen() (err int) {
 	return
 }
 
-func (s *Server) StopListening() (err int) {
+func (s *Server) StopListening() (err error) {
 	log.Log("Stopping server...")
 
 	if !s.Online {
 		log.Log("Error: Server is not running")
-		err = 1
+		err = errors.New("Server is not running")
 		return
 	}
 
@@ -37,5 +54,8 @@ func (s *Server) StopListening() (err int) {
 	log.Log("Server stopped")
 
 	return
+}
+
+func handleConnection(c net.Conn) {
 }
 

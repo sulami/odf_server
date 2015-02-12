@@ -1,8 +1,10 @@
 package server
 
-import "errors"
-import "strconv"
-import "net"
+import (
+	"errors"
+	"strconv"
+	"net"
+)
 
 import "github.com/sulami/odf_server/log"
 
@@ -15,22 +17,20 @@ func (s *Server) Listen() (err error) {
 	log.Log("Server starting up...")
 
 	if s.Online {
-		log.Log("Error: Server is already online")
 		err = errors.New("Server is already online")
 		return
 	}
 
-	ln, e := net.Listen("tcp", ":" + string(s.Port))
+	ln, e := net.Listen("tcp", ":" + strconv.Itoa(s.Port))
 	if e != nil {
-		log.Log("Error: Could not bring up server")
-		err = errors.New("Could not bring up server")
+		err = e
 		return
 	}
 
 	for {
 		conn, e:= ln.Accept()
 		if e != nil {
-			log.Log("Error: something")
+			log.Log(e.Error())
 		}
 		go handleConnection(conn)
 	}
@@ -45,7 +45,6 @@ func (s *Server) StopListening() (err error) {
 	log.Log("Stopping server...")
 
 	if !s.Online {
-		log.Log("Error: Server is not running")
 		err = errors.New("Server is not running")
 		return
 	}

@@ -8,7 +8,7 @@ import "github.com/sulami/odf_server/log"
 import "github.com/sulami/odf_server/server"
 
 func main() {
-	port := flag.Int("port", 1338, "Port to listen on")
+	port := flag.Int("port", 1339, "Port to listen on")
 	flag.Parse()
 
 	server := server.Server{*port, false}

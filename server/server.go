@@ -56,5 +56,14 @@ func (s *Server) StopListening() (err error) {
 }
 
 func handleConnection(c net.Conn) {
+	buf := make([]byte, 1024)
+	_, err := c.Read(buf)
+	if err != nil {
+		log.Log("Error: " + err.Error())
+	} else {
+		log.Log("Incoming connection from " + c.RemoteAddr().String())
+	}
+	c.Write([]byte("ACK"))
+	c.Close()
 }
 

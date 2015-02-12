@@ -2,19 +2,18 @@ package main
 
 import (
 	"flag"
-	"strconv"
 )
 
-import "github.com/sulami/odf_server/auth"
-import "github.com/sulami/odf_server/log"
+import "github.com/sulami/odf_server/server"
 
 func main() {
 	port := flag.Int("port", 1338, "Port to listen on")
 	flag.Parse()
 
-
-	log.Log("Using port: " + strconv.Itoa(*port))
-	user := auth.User{"sulami", "robin"}
-	log.Log("User connected: " + user.Username)
+	server := server.Server{*port, false}
+	e := server.Listen()
+	if e != 0 {
+		return
+	}
 }
 

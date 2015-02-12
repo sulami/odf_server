@@ -15,5 +15,10 @@ func main() {
 	if e != 0 {
 		return
 	}
+
+	e = server.StopListening()
+	if e != 0 {
+		return
+	}
 }
 

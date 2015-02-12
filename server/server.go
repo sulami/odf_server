@@ -3,6 +3,7 @@ package server
 import (
 	"errors"
 	"strconv"
+	"strings"
 	"net"
 )
 
@@ -63,7 +64,21 @@ func handleConnection(c net.Conn) {
 	} else {
 		log.Log("Incoming connection from " + c.RemoteAddr().String())
 	}
-	c.Write([]byte("ACK"))
-	c.Close()
+	cmd := strings.Split(string(buf), " ")
+	switch cmd[0] {
+	case "LOGIN":
+		if len(cmd) != 3 {
+			c.Write([]byte("ERRARGS"))
+			c.Close()
+		}
+		// TODO find the user and try to auth him
+		break;
+	case "LOGOUT":
+		c.Close()
+		break;
+	default:
+		c.Write([]byte("ERRUNKWNCMD"))
+		c.Close()
+	}
 }
 

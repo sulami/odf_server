@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -12,12 +13,12 @@ func main() {
 	port := flag.Int("port", 1338, "Port to listen on")
 	flag.Parse()
 
-	fmt.Println(logtime(), "Using port:", *port)
+	log("Using port: " + strconv.Itoa(*port))
 	user := auth.User{"sulami", "robin"}
-	fmt.Println(logtime(), "User connected:", user)
+	log("User connected: " + user.Username)
 }
 
-func logtime() string {
-	return time.Now().Format("2006-01-02 15:05")
+func log(msg string) {
+	fmt.Println(time.Now().Format("2006-01-02 15:04"), msg)
 }
 

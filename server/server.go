@@ -58,13 +58,13 @@ func (s *Server) StopListening() (err error) {
 
 func handleConnection(c net.Conn) {
 	buf := make([]byte, 1024)
-	_, err := c.Read(buf)
+	n, err := c.Read(buf)
 	if err != nil {
 		log.Log("Error: " + err.Error())
 	} else {
 		log.Log("Incoming connection from " + c.RemoteAddr().String())
 	}
-	cmd := strings.Split(string(buf), " ")
+	cmd := strings.Split(string(buf[:n]), " ")
 	switch cmd[0] {
 	case "LOGIN":
 		if len(cmd) != 3 {

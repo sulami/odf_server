@@ -72,10 +72,8 @@ func handleConnection(c net.Conn) {
 			c.Close()
 		}
 		// TODO find the user and try to auth him
-		break;
 	case "LOGOUT":
 		c.Close()
-		break;
 	default:
 		c.Write([]byte("ERR UNKWNCMD"))
 		c.Close()

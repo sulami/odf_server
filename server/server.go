@@ -68,7 +68,7 @@ func handleConnection(c net.Conn) {
 	switch cmd[0] {
 	case "LOGIN":
 		if len(cmd) != 3 {
-			c.Write([]byte("ERRARGS"))
+			c.Write([]byte("ERR ARGS"))
 			c.Close()
 		}
 		// TODO find the user and try to auth him
@@ -77,7 +77,7 @@ func handleConnection(c net.Conn) {
 		c.Close()
 		break;
 	default:
-		c.Write([]byte("ERRUNKWNCMD"))
+		c.Write([]byte("ERR UNKWNCMD"))
 		c.Close()
 	}
 }

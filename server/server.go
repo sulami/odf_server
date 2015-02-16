@@ -83,14 +83,10 @@ func (client *Client) parseCmd(line string) {
 	cmd := strings.Fields(line)
 	if len(cmd) != 0 {
 		switch cmd[0] {
-		case "LOGIN":
-			if len(cmd) != 3 {
-				client.Write("ERR ARGS")
-				break
-			}
+		case "START":
 			client.Write("OK WELCOME")
-			// TODO find the user and try to auth him
-		case "LOGOUT":
+			// TODO start game routine
+		case "EXIT":
 			client.Write("OK BYE")
 			client.conn.Close()
 		default:

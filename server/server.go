@@ -71,7 +71,11 @@ func handleConnection(c net.Conn) {
 			c.Write([]byte("ERR ARGS\n"))
 			c.Close()
 		}
-		c.Write([]byte("OK WELCOME\n"))
+		if cmd[1] == "sulami" && cmd[2] == "" {
+			c.Write([]byte("OK WELCOME\n"))
+		} else {
+			c.Write([]byte("ERR AUTH\n"))
+		}
 		// TODO find the user and try to auth him
 	case "LOGOUT":
 		c.Write([]byte("OK BYE\n"))

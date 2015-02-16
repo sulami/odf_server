@@ -3,12 +3,12 @@ package server
 import (
 	"bufio"
 	"errors"
+	"fmt"
+	"net"
 	"strconv"
 	"strings"
-	"net"
+	"time"
 )
-
-import "github.com/sulami/odf_server/log"
 
 type Server struct {
 	Port	int
@@ -16,7 +16,7 @@ type Server struct {
 }
 
 func (s *Server) Listen() (err error) {
-	log.Log("Server starting up...")
+	Log("Server starting up...")
 
 	if s.Online {
 		err = errors.New("Server is already online")
@@ -32,19 +32,19 @@ func (s *Server) Listen() (err error) {
 	for {
 		conn, e:= ln.Accept()
 		if e != nil {
-			log.Log(e.Error())
+			Log(e.Error())
 		}
 		go handleConnection(conn)
 	}
 
 	s.Online = true
-	log.Log("Listening on port " + strconv.Itoa(s.Port))
+	Log("Listening on port " + strconv.Itoa(s.Port))
 
 	return
 }
 
 func (s *Server) StopListening() (err error) {
-	log.Log("Stopping server...")
+	Log("Stopping server...")
 
 	if !s.Online {
 		err = errors.New("Server is not running")
@@ -52,7 +52,7 @@ func (s *Server) StopListening() (err error) {
 	}
 
 	s.Online = false
-	log.Log("Server stopped")
+	Log("Server stopped")
 
 	return
 }
@@ -116,7 +116,11 @@ func NewClient(conn net.Conn) *Client {
 }
 
 func handleConnection(conn net.Conn) {
-	log.Log("Incoming connection from " + conn.RemoteAddr().String())
+	Log("Incoming connection from " + conn.RemoteAddr().String())
 	NewClient(conn)
+}
+
+func Log(msg string) {
+	fmt.Println(time.Now().Format("2006-01-02 15:04"), msg)
 }
 

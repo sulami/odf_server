@@ -86,7 +86,6 @@ func (client *Client) parseCmd(line string) {
 		case "LOGIN":
 			if len(cmd) != 3 {
 				client.Write("ERR ARGS")
-				client.conn.Close()
 			}
 			client.Write("OK WELCOME")
 			// TODO find the user and try to auth him

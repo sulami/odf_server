@@ -95,7 +95,6 @@ func (client *Client) parseCmd(line string) {
 			client.conn.Close()
 		default:
 			client.Write("ERR UNKWNCMD")
-			client.conn.Close()
 		}
 	}
 }

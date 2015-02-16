@@ -59,7 +59,6 @@ func (s *Server) StopListening() (err error) {
 
 type Client struct {
 	conn net.Conn
-	incoming chan string
 	outgoing chan string
 	reader *bufio.Reader
 	writer *bufio.Writer
@@ -68,7 +67,7 @@ type Client struct {
 func (client *Client) Read() {
 	for {
 		line, _ := client.reader.ReadString('\n')
-		client.incoming <- line
+		client.parseCmd(line)
 	}
 }
 
@@ -84,13 +83,33 @@ func (client *Client) Listen() {
 	go client.Write()
 }
 
+func (client *Client) parseCmd(line string) {
+	cmd := strings.Fields(line)
+	if len(cmd) != 0 {
+		switch cmd[0] {
+		case "LOGIN":
+			if len(cmd) != 3 {
+				client.conn.Write([]byte("ERR ARGS\n"))
+				client.conn.Close()
+			}
+			client.conn.Write([]byte("OK WELCOME\n"))
+			// TODO find the user and try to auth him
+		case "LOGOUT":
+			client.conn.Write([]byte("OK BYE\n"))
+			client.conn.Close()
+		default:
+			client.conn.Write([]byte("ERR UNKWNCMD\n"))
+			client.conn.Close()
+		}
+	}
+}
+
 func NewClient(conn net.Conn) *Client {
 	reader := bufio.NewReader(conn)
 	writer := bufio.NewWriter(conn)
 
 	client := &Client{
 		conn: conn,
-		incoming: make(chan string),
 		outgoing: make(chan string),
 		reader: reader,
 		writer: writer,
@@ -103,36 +122,6 @@ func NewClient(conn net.Conn) *Client {
 
 func handleConnection(conn net.Conn) {
 	log.Log("Incoming connection from " + conn.RemoteAddr().String())
-
-	client := NewClient(conn)
-
-	go func() {
-		for  {
-			data := <-client.incoming
-			parseCmd(client.conn, data)
-		}
-	} ()
-
-}
-
-func parseCmd(conn net.Conn, data string) {
-	cmd := strings.Fields(data)
-	if len(cmd) != 0 {
-		switch cmd[0] {
-		case "LOGIN":
-			if len(cmd) != 3 {
-				conn.Write([]byte("ERR ARGS\n"))
-				conn.Close()
-			}
-			conn.Write([]byte("OK WELCOME\n"))
-			// TODO find the user and try to auth him
-		case "LOGOUT":
-			conn.Write([]byte("OK BYE\n"))
-			conn.Close()
-		default:
-			conn.Write([]byte("ERR UNKWNCMD\n"))
-			conn.Close()
-		}
-	}
+	NewClient(conn)
 }
 

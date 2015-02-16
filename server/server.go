@@ -59,7 +59,6 @@ func (s *Server) StopListening() (err error) {
 
 type Client struct {
 	conn net.Conn
-	outgoing chan string
 	reader *bufio.Reader
 	writer *bufio.Writer
 }
@@ -71,16 +70,13 @@ func (client *Client) Read() {
 	}
 }
 
-func (client *Client) Write() {
-	for data := range client.outgoing {
-		client.writer.WriteString(data)
-		client.writer.Flush()
-	}
+func (client *Client) Write(msg string) {
+	client.writer.WriteString(msg + "\n")
+	client.writer.Flush()
 }
 
 func (client *Client) Listen() {
 	go client.Read()
-	go client.Write()
 }
 
 func (client *Client) parseCmd(line string) {
@@ -89,16 +85,16 @@ func (client *Client) parseCmd(line string) {
 		switch cmd[0] {
 		case "LOGIN":
 			if len(cmd) != 3 {
-				client.conn.Write([]byte("ERR ARGS\n"))
+				client.Write("ERR ARGS")
 				client.conn.Close()
 			}
-			client.conn.Write([]byte("OK WELCOME\n"))
+			client.Write("OK WELCOME")
 			// TODO find the user and try to auth him
 		case "LOGOUT":
-			client.conn.Write([]byte("OK BYE\n"))
+			client.Write("OK BYE")
 			client.conn.Close()
 		default:
-			client.conn.Write([]byte("ERR UNKWNCMD\n"))
+			client.Write("ERR UNKWNCMD")
 			client.conn.Close()
 		}
 	}
@@ -110,7 +106,6 @@ func NewClient(conn net.Conn) *Client {
 
 	client := &Client{
 		conn: conn,
-		outgoing: make(chan string),
 		reader: reader,
 		writer: writer,
 	}

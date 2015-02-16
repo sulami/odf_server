@@ -1,6 +1,7 @@
 package server
 
 import (
+	"bufio"
 	"errors"
 	"strconv"
 	"strings"
@@ -56,33 +57,82 @@ func (s *Server) StopListening() (err error) {
 	return
 }
 
-func handleConnection(c net.Conn) {
-	buf := make([]byte, 1024)
-	n, err := c.Read(buf)
-	if err != nil {
-		log.Log("Error: " + err.Error())
-	} else {
-		log.Log("Incoming connection from " + c.RemoteAddr().String())
+type Client struct {
+	conn net.Conn
+	incoming chan string
+	outgoing chan string
+	reader *bufio.Reader
+	writer *bufio.Writer
+}
+
+func (client *Client) Read() {
+	for {
+		line, _ := client.reader.ReadString('\n')
+		client.incoming <- line
 	}
-	cmd := strings.Split(string(buf[:n]), " ")
-	switch cmd[0] {
-	case "LOGIN":
-		if len(cmd) != 3 {
-			c.Write([]byte("ERR ARGS\n"))
-			c.Close()
+}
+
+func (client *Client) Write() {
+	for data := range client.outgoing {
+		client.writer.WriteString(data)
+		client.writer.Flush()
+	}
+}
+
+func (client *Client) Listen() {
+	go client.Read()
+	go client.Write()
+}
+
+func NewClient(conn net.Conn) *Client {
+	reader := bufio.NewReader(conn)
+	writer := bufio.NewWriter(conn)
+
+	client := &Client{
+		conn: conn,
+		incoming: make(chan string),
+		outgoing: make(chan string),
+		reader: reader,
+		writer: writer,
+	}
+
+	client.Listen()
+
+	return client
+}
+
+func handleConnection(conn net.Conn) {
+	log.Log("Incoming connection from " + conn.RemoteAddr().String())
+
+	client := NewClient(conn)
+
+	go func() {
+		for  {
+			data := <-client.incoming
+			parseCmd(client.conn, data)
 		}
-		if cmd[1] == "sulami" && cmd[2] == "" {
-			c.Write([]byte("OK WELCOME\n"))
-		} else {
-			c.Write([]byte("ERR AUTH\n"))
+	} ()
+
+}
+
+func parseCmd(conn net.Conn, data string) {
+	cmd := strings.Fields(data)
+	if len(cmd) != 0 {
+		switch cmd[0] {
+		case "LOGIN":
+			if len(cmd) != 3 {
+				conn.Write([]byte("ERR ARGS\n"))
+				conn.Close()
+			}
+			conn.Write([]byte("OK WELCOME\n"))
+			// TODO find the user and try to auth him
+		case "LOGOUT":
+			conn.Write([]byte("OK BYE\n"))
+			conn.Close()
+		default:
+			conn.Write([]byte("ERR UNKWNCMD\n"))
+			conn.Close()
 		}
-		// TODO find the user and try to auth him
-	case "LOGOUT":
-		c.Write([]byte("OK BYE\n"))
-		c.Close()
-	default:
-		c.Write([]byte("ERR UNKWNCMD\n"))
-		c.Close()
 	}
 }
 

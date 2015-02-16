@@ -71,6 +71,7 @@ func handleConnection(c net.Conn) {
 			c.Write([]byte("ERR ARGS\n"))
 			c.Close()
 		}
+		c.Write([]byte("OK WELCOME\n"))
 		// TODO find the user and try to auth him
 	case "LOGOUT":
 		c.Write([]byte("OK BYE\n"))

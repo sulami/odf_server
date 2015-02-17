@@ -88,6 +88,8 @@ func (client *Client) parseCmd(line string) {
 			// TODO start game routine
 		case "EXIT":
 			client.Write("OK BYE")
+			Log("Closing connection to " +
+				client.conn.RemoteAddr().String())
 			client.conn.Close()
 		default:
 			client.Write("ERR UNKWNCMD")

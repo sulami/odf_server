@@ -57,29 +57,36 @@ func (s *Server) StopListening() (err error) {
 	return
 }
 
-type Client struct {
+type Client interface {
+	Read()
+	Write(string)
+	Listen()
+	parseCmd(string)
+}
+
+type client struct {
 	conn net.Conn
 	reader *bufio.Reader
 	writer *bufio.Writer
 }
 
-func (client *Client) Read() {
+func (client *client) Read() {
 	for {
 		line, _ := client.reader.ReadString('\n')
 		client.parseCmd(line)
 	}
 }
 
-func (client *Client) Write(msg string) {
+func (client *client) Write(msg string) {
 	client.writer.WriteString(msg + "\n")
 	client.writer.Flush()
 }
 
-func (client *Client) Listen() {
+func (client *client) Listen() {
 	go client.Read()
 }
 
-func (client *Client) parseCmd(line string) {
+func (client *client) parseCmd(line string) {
 	cmd := strings.Fields(line)
 	if len(cmd) != 0 {
 		switch cmd[0] {
@@ -98,18 +105,20 @@ func (client *Client) parseCmd(line string) {
 }
 
 func NewClient(conn net.Conn) *Client {
+	var c Client
 	reader := bufio.NewReader(conn)
 	writer := bufio.NewWriter(conn)
 
-	client := &Client{
+	client := &client{
 		conn: conn,
 		reader: reader,
 		writer: writer,
 	}
 
 	client.Listen()
+	c = client
 
-	return client
+	return &c
 }
 
 func handleConnection(conn net.Conn) {

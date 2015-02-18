@@ -16,8 +16,8 @@ type Server interface {
 }
 
 type GameServer struct {
-	Port	int
-	Online	bool
+	Port int
+	Online bool
 }
 
 func (s *GameServer) Listen() (err error) {
@@ -28,11 +28,13 @@ func (s *GameServer) Listen() (err error) {
 		return
 	}
 
-	ln, e := net.Listen("tcp", ":" + strconv.Itoa(s.Port))
-	if e != nil {
-		err = e
+	ln, err := net.Listen("tcp", ":" + strconv.Itoa(s.Port))
+	if err != nil {
 		return
 	}
+
+	s.Online = true
+	Log("Listening on port " + strconv.Itoa(s.Port))
 
 	for {
 		conn, e:= ln.Accept()
@@ -41,9 +43,6 @@ func (s *GameServer) Listen() (err error) {
 		}
 		go handleConnection(conn)
 	}
-
-	s.Online = true
-	Log("Listening on port " + strconv.Itoa(s.Port))
 
 	return
 }

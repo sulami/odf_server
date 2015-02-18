@@ -2,14 +2,27 @@ package server
 
 import "testing"
 
-func TestResponses(t *testing.T) {
-	cases := []struct {
-		in, want string
-	}{
-		{"", ""},
+func TestOnlineOffline(t *testing.T) {
+	s := GameServer{1339, false, make(chan bool)}
+
+	err := s.Listen()
+	if err != nil {
+		t.Errorf("Server could not come online: %s", err.Error())
 	}
 
-	for _, _ = range cases {
+	err = s.Listen()
+	if err == nil {
+		t.Errorf("Server did not return an error on duplicated start")
+	}
+
+	err = s.StopListening()
+	if err != nil {
+		t.Errorf("Server could go offline: %s", err.Error())
+	}
+
+	err = s.StopListening()
+	if err == nil {
+		t.Errorf("Server did not return an error on duplicated stop")
 	}
 }
 

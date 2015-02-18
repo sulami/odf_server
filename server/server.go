@@ -1,14 +1,14 @@
 package server
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"net"
 	"strconv"
-	"strings"
 	"time"
 )
+
+import "github.com/sulami/odf_server/client"
 
 type Server interface {
 	Listen() error
@@ -62,73 +62,9 @@ func (s *GameServer) StopListening() (err error) {
 	return
 }
 
-type Client interface {
-	Read()
-	Write(string)
-	Listen()
-	parseCmd(string)
-}
-
-type GameClient struct {
-	conn net.Conn
-	reader *bufio.Reader
-	writer *bufio.Writer
-}
-
-func (client *GameClient) Read() {
-	for {
-		line, _ := client.reader.ReadString('\n')
-		client.parseCmd(line)
-	}
-}
-
-func (client *GameClient) Write(msg string) {
-	client.writer.WriteString(msg + "\n")
-	client.writer.Flush()
-}
-
-func (client *GameClient) Listen() {
-	go client.Read()
-}
-
-func (client *GameClient) parseCmd(line string) {
-	cmd := strings.Fields(line)
-	if len(cmd) != 0 {
-		switch cmd[0] {
-		case "START":
-			client.Write("OK WELCOME")
-			// TODO start game routine
-		case "EXIT":
-			client.Write("OK BYE")
-			Log("Closing connection to " +
-				client.conn.RemoteAddr().String())
-			client.conn.Close()
-		default:
-			client.Write("ERR UNKWNCMD")
-		}
-	}
-}
-
-func NewClient(conn net.Conn) *Client {
-	var c Client
-	reader := bufio.NewReader(conn)
-	writer := bufio.NewWriter(conn)
-
-	client := &GameClient{
-		conn: conn,
-		reader: reader,
-		writer: writer,
-	}
-
-	client.Listen()
-	c = client
-
-	return &c
-}
-
 func handleConnection(conn net.Conn) {
 	Log("Incoming connection from " + conn.RemoteAddr().String())
-	NewClient(conn)
+	client.NewClient(conn)
 }
 
 func Log(msg string) {

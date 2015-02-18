@@ -10,7 +10,7 @@ func main() {
 	port := flag.Int("port", 1339, "Port to listen on")
 	flag.Parse()
 
-	ser := server.Server{*port, false}
+	ser := server.GameServer{*port, false}
 	e := ser.Listen()
 	if e != nil {
 		server.Log("Error: " + e.Error())

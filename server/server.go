@@ -10,12 +10,17 @@ import (
 	"time"
 )
 
-type Server struct {
+type Server interface {
+	Listen() error
+	StopListening() error
+}
+
+type GameServer struct {
 	Port	int
 	Online	bool
 }
 
-func (s *Server) Listen() (err error) {
+func (s *GameServer) Listen() (err error) {
 	Log("Server starting up...")
 
 	if s.Online {
@@ -43,7 +48,7 @@ func (s *Server) Listen() (err error) {
 	return
 }
 
-func (s *Server) StopListening() (err error) {
+func (s *GameServer) StopListening() (err error) {
 	Log("Stopping server...")
 
 	if !s.Online {
@@ -64,29 +69,29 @@ type Client interface {
 	parseCmd(string)
 }
 
-type client struct {
+type GameClient struct {
 	conn net.Conn
 	reader *bufio.Reader
 	writer *bufio.Writer
 }
 
-func (client *client) Read() {
+func (client *GameClient) Read() {
 	for {
 		line, _ := client.reader.ReadString('\n')
 		client.parseCmd(line)
 	}
 }
 
-func (client *client) Write(msg string) {
+func (client *GameClient) Write(msg string) {
 	client.writer.WriteString(msg + "\n")
 	client.writer.Flush()
 }
 
-func (client *client) Listen() {
+func (client *GameClient) Listen() {
 	go client.Read()
 }
 
-func (client *client) parseCmd(line string) {
+func (client *GameClient) parseCmd(line string) {
 	cmd := strings.Fields(line)
 	if len(cmd) != 0 {
 		switch cmd[0] {
@@ -109,7 +114,7 @@ func NewClient(conn net.Conn) *Client {
 	reader := bufio.NewReader(conn)
 	writer := bufio.NewWriter(conn)
 
-	client := &client{
+	client := &GameClient{
 		conn: conn,
 		reader: reader,
 		writer: writer,

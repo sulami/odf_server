@@ -77,3 +77,37 @@ func NewPlayer() *Player {
 	return p
 }
 
+type Monster struct {
+	Worth int
+	Health, MaxHealth int
+	Stamina, MaxStamina int
+	Mana, MaxMana int
+	Strength int
+	Agility int
+	Intelligence int
+	Perception int
+}
+
+func NewMonster(lvl int) *Monster {
+	m := &Monster{
+		MaxHealth: RollAttribute() * lvl / 2,
+		MaxStamina: RollAttribute() * lvl / 2,
+		MaxMana: RollAttribute() * lvl / 2,
+		Strength: RollAttribute(),
+		Agility: RollAttribute(),
+		Intelligence: RollAttribute(),
+		Perception: RollAttribute(),
+	}
+
+	m.Health = m.MaxHealth
+	m.Stamina = m.MaxStamina
+	m.Mana = m.MaxMana
+	m.Worth = m.MaxHealth + m.MaxStamina + m.MaxMana +
+		(m.Strength * lvl / 2) +
+		(m.Agility * lvl / 2) +
+		(m.Intelligence * lvl / 2) +
+		(m.Perception * lvl / 2)
+
+	return m
+}
+

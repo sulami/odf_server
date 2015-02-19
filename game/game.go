@@ -30,6 +30,11 @@ func (g DefaultGame) Parse(cmd []string) (response string, fin bool) {
  * Down below: Game mechanic specific stuff - beware
  */
 
+ type Entity interface {
+	Attack(Entity, func(Entity) (bool, int))
+	LoseHealth(int)
+ }
+
 type Player struct {
 	Experience int
 	Level int
@@ -47,6 +52,20 @@ type Player struct {
 	Wisdom int
 	Perception int
 	Luck int
+}
+
+func (p *Player) Attack(target Entity, atk func(Entity) (bool, int)) {
+	hit, dmg := atk(target)
+	if hit {
+		target.LoseHealth(dmg)
+	}
+}
+
+func (p *Player) LoseHealth(dmg int) {
+	p.Health = p.Health - dmg
+	if p.Health <= 0 {
+		// die
+	}
 }
 
 func RollAttribute() int {

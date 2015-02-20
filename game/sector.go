@@ -5,5 +5,6 @@ type sector struct {
 	x, y int
 	race race
 	population int
+	worlds []world
 }
 

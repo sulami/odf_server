@@ -31,7 +31,7 @@ func (g DefaultGame) Parse(cmd []string) (response string, fin bool) {
  */
 
  type Entity interface {
-	Attack(Entity, func(Entity) (bool, int))
+	Attack(Entity, func(Entity, Entity) (bool, int))
 	LoseHealth(int)
 
 	Strength() int
@@ -63,8 +63,8 @@ type Player struct {
 	luck int
 }
 
-func (p *Player) Attack(target Entity, atk func(Entity) (bool, int)) {
-	hit, dmg := atk(target)
+func (p *Player) Attack(target Entity, atk func(Entity, Entity) (bool, int)) {
+	hit, dmg := atk(p, target)
 	if hit {
 		target.LoseHealth(dmg)
 	}

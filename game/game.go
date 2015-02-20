@@ -33,25 +33,34 @@ func (g DefaultGame) Parse(cmd []string) (response string, fin bool) {
  type Entity interface {
 	Attack(Entity, func(Entity) (bool, int))
 	LoseHealth(int)
+
+	Strength() int
+	Agility() int
+	Intelligence() int
+	Perception() int
+	Luck() int
  }
 
+ //
+ // PLAYER
+ //
 type Player struct {
-	Experience int
-	Level int
+	experience int
+	level int
 
 	// Base stats
-	Health, MaxHealth int
-	Stamina, MaxStamina int
-	Mana, MaxMana int
+	health, maxHealth int
+	stamina, maxStamina int
+	mana, maxMana int
 
 	// Base attributes
-	Strength int
-	Agility int
-	Endurance int
-	Intelligence int
-	Wisdom int
-	Perception int
-	Luck int
+	strength int
+	agility int
+	endurance int
+	intelligence int
+	wisdom int
+	perception int
+	luck int
 }
 
 func (p *Player) Attack(target Entity, atk func(Entity) (bool, int)) {
@@ -62,10 +71,38 @@ func (p *Player) Attack(target Entity, atk func(Entity) (bool, int)) {
 }
 
 func (p *Player) LoseHealth(dmg int) {
-	p.Health = p.Health - dmg
-	if p.Health <= 0 {
+	p.health = p.health - dmg
+	if p.health <= 0 {
 		// die
 	}
+}
+
+//
+// Player - Stat return methods
+//
+func (p *Player) Strength() int {
+	return p.strength
+}
+
+func (p *Player) Agility() int {
+	return p.agility
+}
+
+func (p *Player) Intelligence() int {
+	return p.intelligence
+}
+
+func (p *Player) Perception() int {
+	return p.perception
+}
+
+func (p *Player) Luck() int {
+	return p.luck
+}
+
+func Roll() int {
+	rand.Seed(time.Now().UnixNano())
+	return rand.Intn(100)
 }
 
 func RollAttribute() int {
@@ -75,57 +112,73 @@ func RollAttribute() int {
 
 func NewPlayer() *Player {
 	p := &Player{
-		Experience: 0,
-		Level: 1,
-		Strength: RollAttribute(),
-		Agility: RollAttribute(),
-		Endurance: RollAttribute(),
-		Intelligence: RollAttribute(),
-		Wisdom: RollAttribute(),
-		Perception: RollAttribute(),
-		Luck: RollAttribute(),
+		experience: 0,
+		level: 1,
+		strength: RollAttribute(),
+		agility: RollAttribute(),
+		endurance: RollAttribute(),
+		intelligence: RollAttribute(),
+		wisdom: RollAttribute(),
+		perception: RollAttribute(),
+		luck: RollAttribute(),
 	}
 
-	p.MaxHealth = p.Endurance * p.Level / 2
-	p.Health = p.MaxHealth
-	p.MaxStamina = p.Strength * p.Level / 2
-	p.Stamina = p.MaxStamina
-	p.MaxMana = p.Wisdom * p.Level / 2
-	p.Mana = p.MaxMana
+	p.maxHealth = p.endurance * p.level / 2
+	p.health = p.maxHealth
+	p.maxStamina = p.strength * p.level / 2
+	p.stamina = p.maxStamina
+	p.maxMana = p.wisdom * p.level / 2
+	p.mana = p.maxMana
 
 	return p
 }
 
+func BasicMeleeAttack(source Entity, target Entity) (hit bool, dmg int) {
+	if source.Strength() * Roll() >= target.Agility() * Roll() {
+		hit = true
+		dmg = source.Strength() * Roll() / 10
+		if Roll() <= source.Luck() {
+			dmg = dmg * 2
+		}
+	}
+	return
+}
+
+//
+// MONSTER
+//
 type Monster struct {
-	Worth int
-	Health, MaxHealth int
-	Stamina, MaxStamina int
-	Mana, MaxMana int
-	Strength int
-	Agility int
-	Intelligence int
-	Perception int
+	worth int
+	health, maxHealth int
+	stamina, maxStamina int
+	mana, maxMana int
+	strength int
+	agility int
+	intelligence int
+	perception int
+	luck int
 }
 
 func NewMonster(lvl int) *Monster {
 	m := &Monster{
-		MaxHealth: RollAttribute() * lvl / 2,
-		MaxStamina: RollAttribute() * lvl / 2,
-		MaxMana: RollAttribute() * lvl / 2,
-		Strength: RollAttribute(),
-		Agility: RollAttribute(),
-		Intelligence: RollAttribute(),
-		Perception: RollAttribute(),
+		maxHealth: RollAttribute() * lvl / 2,
+		maxStamina: RollAttribute() * lvl / 2,
+		maxMana: RollAttribute() * lvl / 2,
+		strength: RollAttribute(),
+		agility: RollAttribute(),
+		intelligence: RollAttribute(),
+		perception: RollAttribute(),
+		luck: RollAttribute(),
 	}
 
-	m.Health = m.MaxHealth
-	m.Stamina = m.MaxStamina
-	m.Mana = m.MaxMana
-	m.Worth = m.MaxHealth + m.MaxStamina + m.MaxMana +
-		(m.Strength * lvl / 2) +
-		(m.Agility * lvl / 2) +
-		(m.Intelligence * lvl / 2) +
-		(m.Perception * lvl / 2)
+	m.health = m.maxHealth
+	m.stamina = m.maxStamina
+	m.mana = m.maxMana
+	m.worth = m.maxHealth + m.maxStamina + m.maxMana +
+		(m.strength * lvl / 2) +
+		(m.agility * lvl / 2) +
+		(m.intelligence * lvl / 2) +
+		(m.perception * lvl / 2)
 
 	return m
 }

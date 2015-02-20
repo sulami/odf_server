@@ -183,3 +183,26 @@ func NewMonster(lvl int) *Monster {
 	return m
 }
 
+//
+// Monster - Stat return methods
+//
+func (m *Monster) Strength() int {
+	return m.strength
+}
+
+func (m *Monster) Agility() int {
+	return m.agility
+}
+
+func (m *Monster) Intelligence() int {
+	return m.intelligence
+}
+
+func (m *Monster) Perception() int {
+	return m.perception
+}
+
+func (m *Monster) Luck() int {
+	return m.luck
+}
+

@@ -37,3 +37,47 @@ func generateWorld(w *world) {
 	// TODO name, goods
 }
 
+func generateCaptain() *captain {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	c := &captain{
+		name: humanFirstNames[r.Intn(len(humanFirstNames))] + " " +
+			humanLastNames[r.Intn(len(humanLastNames))],
+		experience: 0,
+		rank: 0,
+	}
+	return c
+}
+
+var humanFirstNames = [...]string {
+	"Rolaf",
+	"Marten",
+	"Justim",
+	"Tery",
+	"Henroy",
+	"Waltev",
+	"Atrip",
+	"Mara",
+	"Jana",
+	"Dora",
+	"Caria",
+	"Donne",
+	"Chera",
+	"Mela",
+	"Tine",
+	"Diana",
+}
+
+var humanLastNames = [...]string {
+	"Warder",
+	"Grivis",
+	"Risell",
+	"Andex",
+	"Rosson",
+	"Pera",
+	"Cooper",
+	"Risach",
+	"Harre",
+	"Campbenn",
+	"Hilley",
+}
+

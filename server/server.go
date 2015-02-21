@@ -9,6 +9,7 @@ import (
 )
 
 import "github.com/sulami/odf_server/client"
+import "github.com/sulami/odf_server/game"
 
 type Server interface {
 	Listen() error
@@ -18,6 +19,7 @@ type Server interface {
 type GameServer struct {
 	Port int
 	Online bool
+	Universe *[]game.Sector
 }
 
 func (s *GameServer) Listen() (err error) {
@@ -27,6 +29,9 @@ func (s *GameServer) Listen() (err error) {
 		err = errors.New("Server is already online")
 		return
 	}
+
+	Log("Generating universe...")
+	s.Universe = game.GenerateUniverse()
 
 	ln, err := net.Listen("tcp", ":" + strconv.Itoa(s.Port))
 	if err != nil {

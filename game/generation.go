@@ -6,16 +6,16 @@ import (
 	"time"
 )
 
-func GenerateUniverse() []sector {
+func GenerateUniverse() *[]Sector {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	u := make([]sector, 50 + r.Intn(50))
+	u := make([]Sector, 50 + r.Intn(50))
 	for i := range u {
 		go generateSector(&u[i], len(u))
 	}
-	return u
+	return &u
 }
 
-func generateSector(s *sector, uniSize int) {
+func generateSector(s *Sector, uniSize int) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	s.worlds = make([]world, 2 + r.Intn(10))
 	s.name = sectorNames[r.Intn(len(sectorNames))]

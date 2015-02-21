@@ -1,6 +1,6 @@
 package game
 
-type sector struct {
+type Sector struct {
 	name string
 	x, y int
 	race race

@@ -3,7 +3,7 @@ package game
 type fleet struct {
 	name string
 	commander captain
-	location sector
+	location world
 	ships []ship
 }
 

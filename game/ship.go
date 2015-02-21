@@ -17,3 +17,11 @@ func (s *ship) shieldValue() (v int) {
 	return
 }
 
+func (s *ship) attackValue() (shield, hull int) {
+	for _, weapon := range s.weapons {
+		shield += weapon.shieldDamage
+		hull += weapon.hullDamage
+	}
+	return
+}
+

@@ -15,9 +15,9 @@ type hull struct {
 
 type weapon struct {
 	name string
-	hull int
-	shield int
-	power int
+	hullDamage int
+	shieldDamage int
+	powerDemand int
 	size int
 	cost int
 }
@@ -25,7 +25,7 @@ type weapon struct {
 type shield struct {
 	name string
 	strength int
-	power int
+	powerDemand int
 	size int
 	cost int
 }

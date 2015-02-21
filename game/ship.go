@@ -7,6 +7,7 @@ type ship struct {
 	generator generator
 	weapons []weapon
 	shields []shield
+	cargo map[good]int
 }
 
 func (s *ship) shieldValue() (v int) {

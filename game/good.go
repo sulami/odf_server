@@ -5,5 +5,6 @@ type good struct {
 	baseWorth int
 	techLevel int
 	rarity int
+	size int
 }
 

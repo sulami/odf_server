@@ -9,6 +9,7 @@ type hull struct {
 	crewCapacity int
 	weaponCapacity int
 	shieldCapacity int
+	cargoCapacity int
 	cost int
 }
 

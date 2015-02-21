@@ -3,6 +3,8 @@ package game
 type player struct {
 	name string
 	money int
-	ships []ship
+	homeworld world
+	worlds []world
+	fleets []fleet
 }
 

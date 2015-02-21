@@ -2,6 +2,7 @@ package game
 
 import (
 	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -17,16 +18,18 @@ func GenerateUniverse() []sector {
 func generateSector(s *sector, uniSize int) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	s.worlds = make([]world, 2 + r.Intn(10))
+	s.name = sectorNames[r.Intn(len(sectorNames))]
 	for i := range s.worlds {
-		go generateWorld(&s.worlds[i])
+		go generateWorld(&s.worlds[i], s.name + " " + strconv.Itoa(i+1))
 	}
 	s.x = r.Intn(uniSize)
 	s.y = r.Intn(uniSize)
-	// TODO name, race
+	// TODO race
 }
 
-func generateWorld(w *world) {
+func generateWorld(w *world, name string) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	w.name = name
 	w.population = 1e6 + r.Intn(1e9)
 	w.techLevel = 1 + r.Intn(6)
 	if w.techLevel < r.Intn(10) {
@@ -34,7 +37,7 @@ func generateWorld(w *world) {
 	} else {
 		w.shipyard = false
 	}
-	// TODO name, goods
+	// TODO goods
 }
 
 func generateCaptain() *captain {
@@ -79,5 +82,19 @@ var humanLastNames = [...]string {
 	"Harre",
 	"Campbenn",
 	"Hilley",
+}
+
+var sectorNames = [...]string {
+	"Pike",
+	"Xindi",
+	"Mimir",
+	"Ceani",
+	"Calais",
+	"Enyo",
+	"Bani",
+	"Aule",
+	"Herschel",
+	"Felis",
+	"Ceberi",
 }
 

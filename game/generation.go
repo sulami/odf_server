@@ -10,7 +10,7 @@ func GenerateUniverse() *[]Sector {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	u := make([]Sector, 50 + r.Intn(50))
 	for i := range u {
-		go generateSector(&u[i], len(u))
+		generateSector(&u[i], len(u))
 	}
 	return &u
 }
@@ -20,7 +20,7 @@ func generateSector(s *Sector, uniSize int) {
 	s.worlds = make([]world, 2 + r.Intn(10))
 	s.name = sectorNames[r.Intn(len(sectorNames))]
 	for i := range s.worlds {
-		go generateWorld(&s.worlds[i], s.name + " " + strconv.Itoa(i+1))
+		generateWorld(&s.worlds[i], s.name + " " + strconv.Itoa(i+1))
 	}
 	s.x = r.Intn(uniSize)
 	s.y = r.Intn(uniSize)

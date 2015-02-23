@@ -37,7 +37,23 @@ func generateWorld(w *world, name string) {
 	} else {
 		w.shipyard = false
 	}
-	// TODO goods
+	w.goods = make([]good, 0)
+	for i := 0; i < 1 + r.Intn(len(tradeGoods)); i++ {
+		g := tradeGoods[r.Intn(len(tradeGoods))]
+		inList := false
+		// Duplication check
+		for _, gl := range w.goods {
+			if g == gl {
+				inList = true
+			}
+		}
+		if !inList {
+			// Tech Level check
+			if g.techLevel <= w.techLevel {
+				w.goods = append(w.goods, g)
+			}
+		}
+	}
 }
 
 func generateCaptain() *captain {

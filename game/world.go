@@ -5,6 +5,6 @@ type world struct {
 	population int
 	techLevel int
 	shipyard bool
-	goods map[good]int
+	goods []good
 }
 

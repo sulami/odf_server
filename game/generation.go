@@ -24,7 +24,7 @@ func generateSector(s *Sector, uniSize int) {
 	}
 	s.x = r.Intn(uniSize)
 	s.y = r.Intn(uniSize)
-	// TODO race
+	s.race = raceList[r.Intn(len(raceList))]
 }
 
 func generateWorld(w *world, name string) {

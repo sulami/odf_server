@@ -3,9 +3,9 @@ package game
 type player struct {
 	name string
 	money int
-	homeworld world
-	worlds []world
-	fleets []fleet
+	homeworld *world
+	worlds []*world
+	fleets []*fleet
 }
 
 func initPlayer(name string, universe []Sector) player {

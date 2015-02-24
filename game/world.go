@@ -5,6 +5,7 @@ type world struct {
 	population int
 	techLevel int
 	shipyard bool
-	goods []good
+	goods []*good
+	owner *player
 }
 

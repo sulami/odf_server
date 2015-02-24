@@ -8,3 +8,12 @@ type player struct {
 	fleets []fleet
 }
 
+func initPlayer(name string, universe []Sector) player {
+	p := player{
+		name: name,
+		money: 10000,
+	}
+	// TODO select a homeworld
+	return p
+}
+

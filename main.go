@@ -11,7 +11,7 @@ func main() {
 	flag.Parse()
 
 	ser := server.GameServer{
-		Port: *port,
+		Port:   *port,
 		Online: false,
 	}
 	e := ser.Listen()
@@ -26,4 +26,3 @@ func main() {
 		return
 	}
 }
-

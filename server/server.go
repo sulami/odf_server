@@ -8,18 +8,13 @@ import (
 	"time"
 )
 
-type Server interface {
-	Listen() error
-	StopListening() error
-}
-
-type GameServer struct {
+type Server struct {
 	Port int
 	Online bool
-	Game Game
+	Game *Game
 }
 
-func (s *GameServer) Listen() (err error) {
+func (s *Server) Listen() (err error) {
 	Log("Server starting up...")
 
 	if s.Online {
@@ -28,7 +23,7 @@ func (s *GameServer) Listen() (err error) {
 	}
 
 	Log("Generating universe...")
-	s.Game = &DefaultGame{}
+	s.Game = &Game{}
 	s.Game.GenerateUniverse()
 
 	ln, err := net.Listen("tcp", ":" + strconv.Itoa(s.Port))
@@ -50,7 +45,7 @@ func (s *GameServer) Listen() (err error) {
 	return
 }
 
-func (s *GameServer) StopListening() (err error) {
+func (s *Server) StopListening() (err error) {
 	Log("Stopping server...")
 
 	if !s.Online {

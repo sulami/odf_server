@@ -1,20 +1,14 @@
 package server
 
-type Game interface {
-	Parse([]string) (string, bool)
-	GenerateUniverse()
-}
-
-type DefaultGame struct {
+type Game struct {
 	players []*player
 	universe []*Sector
 }
 
-func (g DefaultGame) Parse(cmd []string) (response string, fin bool) {
+func (g Game) Parse(cmd []string) (response string, fin bool) {
 	switch cmd[0] {
 	case "START":
-		response = "OK WELCOME"
-		// TODO start game routine
+		response = "OK STARTING"
 	case "EXIT":
 		response = "OK BYE"
 		fin = true

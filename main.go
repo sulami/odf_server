@@ -10,7 +10,7 @@ func main() {
 	port := flag.Int("port", 1339, "Port to listen on")
 	flag.Parse()
 
-	ser := server.GameServer{
+	ser := server.Server{
 		Port:   *port,
 		Online: false,
 	}

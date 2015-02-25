@@ -6,37 +6,30 @@ import (
 	"strings"
 )
 
-type Client interface {
-	Read()
-	Write(string)
-	Listen()
-	parseCmd(string)
-}
-
-type GameClient struct {
+type Client struct {
 	conn net.Conn
 	reader *bufio.Reader
 	writer *bufio.Writer
 	game Game
 }
 
-func (client *GameClient) Read() {
+func (client *Client) Read() {
 	for {
 		line, _ := client.reader.ReadString('\n')
 		client.parseCmd(line)
 	}
 }
 
-func (client *GameClient) Write(msg string) {
+func (client *Client) Write(msg string) {
 	client.writer.WriteString(msg + "\n")
 	client.writer.Flush()
 }
 
-func (client *GameClient) Listen() {
+func (client *Client) Listen() {
 	go client.Read()
 }
 
-func (client *GameClient) parseCmd(line string) {
+func (client *Client) parseCmd(line string) {
 	cmd := strings.Fields(line)
 	if len(cmd) != 0 {
 		r, f := client.game.Parse(cmd)
@@ -50,12 +43,11 @@ func (client *GameClient) parseCmd(line string) {
 }
 
 func NewClient(conn net.Conn) *Client {
-	var c Client
 	reader := bufio.NewReader(conn)
 	writer := bufio.NewWriter(conn)
-	game := DefaultGame{}
+	game := Game{}
 
-	client := &GameClient{
+	client := &Client{
 		conn: conn,
 		reader: reader,
 		writer: writer,
@@ -63,8 +55,7 @@ func NewClient(conn net.Conn) *Client {
 	}
 
 	client.Listen()
-	c = client
 
-	return &c
+	return client
 }
 

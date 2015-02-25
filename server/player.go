@@ -6,6 +6,7 @@ import (
 )
 
 type player struct {
+	client *Client
 	name string
 	money int
 	homeworld *world
@@ -13,8 +14,9 @@ type player struct {
 	fleets []*fleet
 }
 
-func initPlayer(name string, universe []Sector) player {
-	p := player{
+func initPlayer(client *Client, name string, universe []Sector) *player {
+	p := &player{
+		client: client,
 		name: name,
 		money: 10000,
 		homeworld: selectHomeworld(universe),

@@ -5,9 +5,12 @@ import (
 
 type Game interface {
 	Parse([]string) (string, bool)
+	GenerateUniverse()
 }
 
 type DefaultGame struct {
+	players []*player
+	universe []*Sector
 }
 
 func (g DefaultGame) Parse(cmd []string) (response string, fin bool) {

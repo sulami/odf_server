@@ -19,7 +19,7 @@ type Server interface {
 type GameServer struct {
 	Port int
 	Online bool
-	Universe *[]game.Sector
+	Game game.Game
 }
 
 func (s *GameServer) Listen() (err error) {
@@ -31,7 +31,8 @@ func (s *GameServer) Listen() (err error) {
 	}
 
 	Log("Generating universe...")
-	s.Universe = game.GenerateUniverse()
+	s.Game = &game.DefaultGame{}
+	s.Game.GenerateUniverse()
 
 	ln, err := net.Listen("tcp", ":" + strconv.Itoa(s.Port))
 	if err != nil {

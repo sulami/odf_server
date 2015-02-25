@@ -6,13 +6,13 @@ import (
 	"time"
 )
 
-func GenerateUniverse() *[]Sector {
+func (g DefaultGame) GenerateUniverse() {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	u := make([]Sector, 5 + r.Intn(5))
+	u := make([]*Sector, 5 + r.Intn(5))
 	for i := range u {
-		generateSector(&u[i], len(u))
+		generateSector(u[i], len(u))
 	}
-	return &u
+	g.universe = u
 }
 
 func generateSector(s *Sector, uniSize int) {

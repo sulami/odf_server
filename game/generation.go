@@ -17,6 +17,7 @@ func GenerateUniverse() *[]Sector {
 
 func generateSector(s *Sector, uniSize int) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	s = &Sector{}
 	s.worlds = make([]*world, 2 + r.Intn(10))
 	s.name = sectorNames.popItem(r.Intn(len(sectorNames)))
 	for i := range s.worlds {
@@ -29,6 +30,7 @@ func generateSector(s *Sector, uniSize int) {
 
 func generateWorld(w *world, name string) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	w = &world{}
 	w.name = name
 	w.population = 1e6 + r.Intn(1e9)
 	w.techLevel = 1 + r.Intn(6)

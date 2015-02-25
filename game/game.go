@@ -1,8 +1,5 @@
 package game
 
-import (
-)
-
 type Game interface {
 	Parse([]string) (string, bool)
 	GenerateUniverse()

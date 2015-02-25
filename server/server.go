@@ -2,10 +2,8 @@ package server
 
 import (
 	"errors"
-	"fmt"
 	"net"
 	"strconv"
-	"time"
 )
 
 type Server struct {
@@ -62,9 +60,5 @@ func (s *Server) StopListening() (err error) {
 func handleConnection(conn net.Conn) {
 	Log("Incoming connection from " + conn.RemoteAddr().String())
 	NewClient(conn)
-}
-
-func Log(msg string) {
-	fmt.Println(time.Now().Format("2006-01-02 15:04"), msg)
 }
 

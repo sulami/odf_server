@@ -14,7 +14,7 @@ type player struct {
 	fleets []*fleet
 }
 
-func initPlayer(client *Client, name string, universe []Sector) *player {
+func initPlayer(client *Client, name string, universe *Universe) *player {
 	p := &player{
 		client: client,
 		name: name,
@@ -24,9 +24,9 @@ func initPlayer(client *Client, name string, universe []Sector) *player {
 	return p
 }
 
-func selectHomeworld(universe []Sector) *world {
+func selectHomeworld(universe *Universe) *world {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	hs := universe[r.Intn(len(universe))]
+	hs := (*universe)[r.Intn(len(*universe))]
 	hw := hs.worlds[r.Intn(len(hs.worlds))]
 	if hw.owner == nil {
 		return hw

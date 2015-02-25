@@ -11,7 +11,7 @@ func main() {
 	flag.Parse()
 
 	ser := server.Server{
-		Port:   *port,
+		Port: *port,
 		Online: false,
 	}
 	e := ser.Listen()

@@ -6,31 +6,32 @@ import (
 	"time"
 )
 
-func (g Game) GenerateUniverse() {
+func (g *Game) GenerateUniverse() {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	u := make([]*Sector, 5 + r.Intn(5))
 	for i := range u {
-		generateSector(u[i], len(u))
+		u[i] = generateSector(len(u))
 	}
-	g.universe = u
+	g.universe = (*Universe)(&u)
 }
 
-func generateSector(s *Sector, uniSize int) {
+func generateSector(uniSize int) *Sector {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	s = &Sector{}
+	s := new(Sector)
 	s.worlds = make([]*world, 2 + r.Intn(10))
 	s.name = sectorNames.popItem(r.Intn(len(sectorNames)))
 	for i := range s.worlds {
-		generateWorld(s.worlds[i], s.name + " " + strconv.Itoa(i+1))
+		s.worlds[i] = generateWorld(s.name + " " + strconv.Itoa(i+1))
 	}
 	s.x = r.Intn(uniSize)
 	s.y = r.Intn(uniSize)
 	s.race = raceList[r.Intn(len(raceList))]
+	return s
 }
 
-func generateWorld(w *world, name string) {
+func generateWorld(name string) *world {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	w = &world{}
+	w := new(world)
 	w.name = name
 	w.population = 1e6 + r.Intn(1e9)
 	w.techLevel = 1 + r.Intn(6)
@@ -56,6 +57,7 @@ func generateWorld(w *world, name string) {
 			}
 		}
 	}
+	return w
 }
 
 func generateCaptain() *captain {

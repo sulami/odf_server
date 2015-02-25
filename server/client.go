@@ -10,7 +10,7 @@ type Client struct {
 	conn net.Conn
 	reader *bufio.Reader
 	writer *bufio.Writer
-	game Game
+	game *Game
 }
 
 func (client *Client) Read() {
@@ -45,13 +45,11 @@ func (client *Client) parseCmd(line string) {
 func NewClient(conn net.Conn) *Client {
 	reader := bufio.NewReader(conn)
 	writer := bufio.NewWriter(conn)
-	game := Game{}
 
 	client := &Client{
 		conn: conn,
 		reader: reader,
 		writer: writer,
-		game: game,
 	}
 
 	client.Listen()

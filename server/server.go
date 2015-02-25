@@ -9,6 +9,7 @@ import (
 type Server struct {
 	Port int
 	Online bool
+	Clients []*Client
 	Game *Game
 }
 
@@ -21,7 +22,9 @@ func (s *Server) Listen() (err error) {
 	}
 
 	Log("Generating universe...")
-	s.Game = &Game{}
+	s.Game = &Game{
+		server: s,
+	}
 	s.Game.GenerateUniverse()
 
 	ln, err := net.Listen("tcp", ":" + strconv.Itoa(s.Port))
@@ -37,7 +40,7 @@ func (s *Server) Listen() (err error) {
 		if e != nil {
 			Log(e.Error())
 		}
-		go handleConnection(conn)
+		go s.handleConnection(conn)
 	}
 
 	return
@@ -57,8 +60,10 @@ func (s *Server) StopListening() (err error) {
 	return
 }
 
-func handleConnection(conn net.Conn) {
+func (s *Server) handleConnection(conn net.Conn) {
 	Log("Incoming connection from " + conn.RemoteAddr().String())
-	NewClient(conn)
+	c := NewClient(conn)
+	c.game = s.Game
+	s.Clients = append(s.Clients, c)
 }
 

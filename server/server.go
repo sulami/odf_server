@@ -8,9 +8,6 @@ import (
 	"time"
 )
 
-import "github.com/sulami/odf_server/client"
-import "github.com/sulami/odf_server/game"
-
 type Server interface {
 	Listen() error
 	StopListening() error
@@ -19,7 +16,7 @@ type Server interface {
 type GameServer struct {
 	Port int
 	Online bool
-	Game game.Game
+	Game Game
 }
 
 func (s *GameServer) Listen() (err error) {
@@ -31,7 +28,7 @@ func (s *GameServer) Listen() (err error) {
 	}
 
 	Log("Generating universe...")
-	s.Game = &game.DefaultGame{}
+	s.Game = &DefaultGame{}
 	s.Game.GenerateUniverse()
 
 	ln, err := net.Listen("tcp", ":" + strconv.Itoa(s.Port))
@@ -69,7 +66,7 @@ func (s *GameServer) StopListening() (err error) {
 
 func handleConnection(conn net.Conn) {
 	Log("Incoming connection from " + conn.RemoteAddr().String())
-	client.NewClient(conn)
+	NewClient(conn)
 }
 
 func Log(msg string) {

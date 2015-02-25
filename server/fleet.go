@@ -1,4 +1,4 @@
-package game
+package server
 
 type fleet struct {
 	name string

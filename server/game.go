@@ -1,4 +1,4 @@
-package game
+package server
 
 type Game interface {
 	Parse([]string) (string, bool)

@@ -1,14 +1,10 @@
-package client
+package server
 
 import (
 	"bufio"
-	"fmt"
 	"net"
 	"strings"
-	"time"
 )
-
-import "github.com/sulami/odf_server/game"
 
 type Client interface {
 	Read()
@@ -21,7 +17,7 @@ type GameClient struct {
 	conn net.Conn
 	reader *bufio.Reader
 	writer *bufio.Writer
-	game game.Game
+	game Game
 }
 
 func (client *GameClient) Read() {
@@ -57,7 +53,7 @@ func NewClient(conn net.Conn) *Client {
 	var c Client
 	reader := bufio.NewReader(conn)
 	writer := bufio.NewWriter(conn)
-	game := game.DefaultGame{}
+	game := DefaultGame{}
 
 	client := &GameClient{
 		conn: conn,
@@ -70,9 +66,5 @@ func NewClient(conn net.Conn) *Client {
 	c = client
 
 	return &c
-}
-
-func Log(msg string) {
-	fmt.Println(time.Now().Format("2006-01-02 15:04"), msg)
 }
 

@@ -1,4 +1,4 @@
-package game
+package server
 
 type Sector struct {
 	name string

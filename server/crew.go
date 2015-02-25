@@ -1,4 +1,4 @@
-package game
+package server
 
 type captain struct {
 	name string

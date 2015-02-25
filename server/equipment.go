@@ -1,4 +1,4 @@
-package game
+package server
 
 type equipment interface {
 	// for trading/equipment/etc

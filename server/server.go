@@ -24,6 +24,7 @@ func (s *Server) Listen() (err error) {
 	Log("Generating universe...")
 	s.Game = &Game{
 		server: s,
+		round: 0,
 	}
 	s.Game.GenerateUniverse()
 

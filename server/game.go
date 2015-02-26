@@ -6,6 +6,7 @@ type Game struct {
 	server *Server
 	players []*player
 	universe *Universe
+	round int
 }
 
 func (g Game) Parse(cmd []string) (response string, fin bool) {
@@ -29,5 +30,9 @@ func (g *Game) Start() {
 		player := initPlayer(p, "sulami", g.universe)
 		g.players = append(g.players, player)
 	}
+}
+
+func (g *Game) Round() {
+	g.round += 1
 }
 

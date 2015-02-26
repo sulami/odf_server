@@ -66,6 +66,8 @@ func (s *Server) handleConnection(conn net.Conn) {
 	c := NewClient(conn)
 	c.game = s.Game
 	s.Clients = append(s.Clients, c)
+	c.Write("OK WELCOME")
+	c.Write("QRY NAME")
 }
 
 func (s *Server) WriteAll(msg string) {

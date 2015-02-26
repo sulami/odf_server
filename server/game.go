@@ -24,6 +24,7 @@ func (g Game) Parse(cmd []string) (response string, fin bool) {
 
 func (g *Game) Start() {
 	// Add one player per connected client
+	g.server.WriteAll("UPD GAMESTART")
 	for _, p := range g.server.Clients {
 		player := initPlayer(p, "sulami", g.universe)
 		g.players = append(g.players, player)

@@ -67,3 +67,9 @@ func (s *Server) handleConnection(conn net.Conn) {
 	s.Clients = append(s.Clients, c)
 }
 
+func (s *Server) WriteAll(msg string) {
+	for _, c := range s.Clients {
+		c.Write(msg)
+	}
+}
+

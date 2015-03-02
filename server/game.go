@@ -1,5 +1,7 @@
 package server
 
+import "strconv"
+
 type Universe []*Sector
 
 type Game struct {
@@ -37,7 +39,15 @@ func (g *Game) Start() {
 
 func (g *Game) Round() {
 	g.round += 1
-	g.server.WriteAll("UPD UNIVERSE")
-	// TODO package universe/game status into string
+	g.server.WriteAll(g.Status())
+}
+
+func (g *Game) Status() string {
+	players := strconv.Itoa(len(g.players))
+	round := strconv.Itoa(g.round)
+
+	out := "UPD UNIVERSE ROUND " + round + "PLAYERS " + players
+
+	return out
 }
 

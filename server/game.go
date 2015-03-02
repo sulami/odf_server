@@ -9,7 +9,7 @@ type Game struct {
 	round int
 }
 
-func (g **Game) Parse(cmd []string) (response string, fin bool) {
+func (g *Game) Parse(cmd []string) (response string, fin bool) {
 	switch cmd[0] {
 	case "START":
 		response = "OK STARTING"

@@ -50,9 +50,8 @@ func (g *Game) Status() string {
 		uni += sec.Info()
 	}
 
-
-	out := "UPD STATUS ROUND " + round + "PLAYERS " + players + "UNIVERSE" +
-	       uni
+	out := "UPD STATUS ROUND " + round + " PLAYERS " + players +
+	       " UNIVERSE" + uni
 
 	return out
 }

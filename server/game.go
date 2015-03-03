@@ -4,10 +4,6 @@ import "strconv"
 
 type Universe []*Sector
 
-func (u *Universe) Info() string {
-	return ""
-}
-
 type Game struct {
 	server *Server
 	players []*player
@@ -49,7 +45,11 @@ func (g *Game) Round() {
 func (g *Game) Status() string {
 	players := strconv.Itoa(len(g.players))
 	round := strconv.Itoa(g.round)
-	uni := g.universe.Info()
+	uni := ""
+	for _, sec := range *g.universe {
+		uni += sec.Info()
+	}
+
 
 	out := "UPD STATUS ROUND " + round + "PLAYERS " + players + "UNIVERSE" +
 	       uni

@@ -7,3 +7,7 @@ type Sector struct {
 	worlds []*world
 }
 
+func (s *Sector) Info() string {
+	return ""
+}
+

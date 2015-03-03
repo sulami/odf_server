@@ -15,6 +15,10 @@ func (s *Sector) Info() string {
 	retval := fmt.Sprintf(" SECTOR %s %d %d %s %d", s.name, s.x, s.y,
 	                      s.race, len(s.worlds))
 
+	for _, wor := range s.worlds {
+		retval += wor.Info()
+	}
+
 	return retval
 }
 
